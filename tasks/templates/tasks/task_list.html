@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TaskMaster - My List</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; padding-top: 50px; }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 450px; }
+        h1 { color: #2c3e50; margin-bottom: 5px; }
+        .user-name { color: #7f8c8d; margin-bottom: 20px; display: block; font-size: 14px; }
+        
+        .add-btn { 
+            background: #1a73e8; color: white; padding: 12px 20px; 
+            text-decoration: none; border-radius: 8px; display: inline-block; 
+            margin-bottom: 25px; font-weight: bold; transition: 0.3s;
+        }
+        .add-btn:hover { background: #1557b0; }
+
+        ul { list-style: none; padding: 0; }
+        li { 
+            background: #fff; border: 1px solid #eee; margin-bottom: 12px; 
+            padding: 15px; border-radius: 10px; display: flex; 
+            justify-content: space-between; align-items: center; 
+            transition: 0.3s;
+        }
+        li:hover { border-color: #1a73e8; }
+
+        .task-title { flex-grow: 1; font-size: 16px; color: #333; }
+        .completed { text-decoration: line-through; color: #95a5a6; }
+
+        /* ستايل زر الصح (Toggle) */
+        .toggle-btn {
+            text-decoration: none; background: #f8f9fa; border: 1px solid #ddd;
+            padding: 6px 12px; border-radius: 6px; font-size: 13px;
+            color: #333; margin-right: 10px; transition: 0.2s;
+        }
+        .toggle-btn:hover { background: #e9ecef; border-color: #bbb; }
+        .btn-done { background: #e8f5e9; border-color: #a5d6a7; color: #2e7d32; }
+
+        .delete-icon { text-decoration: none; font-size: 18px; filter: grayscale(1); transition: 0.2s; }
+        .delete-icon:hover { filter: grayscale(0); transform: scale(1.2); }
+        
+        .logout { color: #e74c3c; text-decoration: none; font-size: 13px; margin-top: 25px; display: block; text-align: center; }
+        hr { border: 0; border-top: 1px solid #eee; margin: 20px 0; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>TaskMaster</h1>
+    <span class="user-name">Welcome back, <b>{{ request.user }}</b>!</span>
+
+    <a href="{% url 'task-create' %}" class="add-btn">+ Add New Task</a>
+
+    <ul>
+        {% for task in tasks %}
+            <li>
+                <span class="task-title {% if task.complete %}completed{% endif %}">
+                    {{ task.title }}
+                </span>
+                
+                <div>
+                    <a href="{% url 'task-toggle' task.id %}" class="toggle-btn {% if task.complete %}btn-done{% endif %}">
+                        {% if task.complete %} ✅ Done {% else %} ⬜️ Mark Done {% endif %}
+                    </a>
+                    
+                    <a href="{% url 'task-delete' task.id %}" class="delete-icon">🗑️</a>
+                </div>
+            </li>
+        {% empty %}
+            <li style="color: #999; justify-content: center;">Your list is empty. Add a task!</li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+    <a href="{% url 'logout' %}" class="logout">Logout from account</a>
+</div>
+
+</body>
+</html>
